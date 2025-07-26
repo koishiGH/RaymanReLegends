@@ -1,4 +1,4 @@
-# RaymanReLegends Commit History
+# RaymanReLegends Commit History (Before I accidentally messed up!)
 
 Made because I was messing around with git and I messed something up haha.. Commits are sorted newest to oldest.
 
