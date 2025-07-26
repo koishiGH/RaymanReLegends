@@ -16,3 +16,5 @@ I would honestly like ANY sort of help with this, this is my SECOND time doing s
 
 ## Links
 * [How to build](Building.md)
+* [Notes that I made](Notes.md)
+* [Commit History](Commits.md)
