@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<root>
+	<Screen Width="1920" Height="1080" FullScreen="1" />
+	<Space ZMin="0.1" ZMax="1.0" />
+	<Editor ZoomFactor="0.1" SCM="Perforce" />
+	<Debug VideoCapture="0" AudioCapture="0" />
+	<PC XInputDevicesOnly="1" />
+</root>
