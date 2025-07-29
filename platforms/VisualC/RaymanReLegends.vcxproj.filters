@@ -16,37 +16,46 @@
     <Filter Include="Source Files\engine">
       <UniqueIdentifier>{0a47dd27-46ed-458e-91e4-4a2f4f554a9a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\engine\core">
-      <UniqueIdentifier>{c323ed1c-cd8f-4dfc-965e-ec631621a875}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\external">
       <UniqueIdentifier>{63b43819-b836-481b-9216-c2eca89b2f40}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\engine\resource">
-      <UniqueIdentifier>{7d766617-fc67-4174-8f08-acd6f71d113b}</UniqueIdentifier>
+    <Filter Include="Source Files\engine\graphics">
+      <UniqueIdentifier>{0b7a8d49-cbdf-473a-9a72-460ca2573826}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\engine\rendering">
-      <UniqueIdentifier>{59a9a787-8142-4575-ae93-03fabff7b1ba}</UniqueIdentifier>
+    <Filter Include="Source Files\engine\platform">
+      <UniqueIdentifier>{9fceae42-ba75-4ccb-a314-1c2555aacd3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\resource">
+      <UniqueIdentifier>{22fd93ba-e2dd-4433-9dfe-655e6a0a04ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\system">
+      <UniqueIdentifier>{7f15cfce-17fc-42c4-9948-79ee7e9fc19a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\video">
+      <UniqueIdentifier>{df0891d3-f1ab-4f80-a756-1c169ac9c91d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\core\config.cpp">
-      <Filter>Source Files\engine\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\core\window.cpp">
-      <Filter>Source Files\engine\core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\external\tinyxml2.cpp">
       <Filter>Source Files\external</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\core\regconfig.cpp">
-      <Filter>Source Files\engine\core</Filter>
+    <ClCompile Include="..\..\src\engine\graphics\DirectXRenderer.cpp">
+      <Filter>Source Files\engine\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\core\DXInit.cpp">
-      <Filter>Source Files\engine\core</Filter>
+    <ClCompile Include="..\..\src\engine\graphics\GraphicsInitializer.cpp">
+      <Filter>Source Files\engine\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\graphics\SDL2Renderer.cpp">
+      <Filter>Source Files\engine\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\platform\DXInit.cpp">
+      <Filter>Source Files\engine\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\platform\window.cpp">
+      <Filter>Source Files\engine\platform</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\resource\Bundle.cpp">
       <Filter>Source Files\engine\resource</Filter>
@@ -54,8 +63,14 @@
     <ClCompile Include="..\..\src\engine\resource\FileProperties.cpp">
       <Filter>Source Files\engine\resource</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\rendering\Video.cpp">
-      <Filter>Source Files\engine\rendering</Filter>
+    <ClCompile Include="..\..\src\engine\system\config.cpp">
+      <Filter>Source Files\engine\system</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\system\regconfig.cpp">
+      <Filter>Source Files\engine\system</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\video\Video.cpp">
+      <Filter>Source Files\engine\video</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

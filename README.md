@@ -14,6 +14,16 @@ This is A HEAVY WORK IN PROGRESS, NOT MUCH IS DONE YET.
 
 I would honestly like ANY sort of help with this, this is my SECOND time doing something related to reverse engineering (first time was making a cheat for an old Zenless Zone Zero build). If you'd like to help contact me on discord (_koisprite).
 
+## Launch Arguments
+
+### Changing what renderer to use
+
+```bash
+"Rayman Legends.exe" -renderer=auto # for the platform default
+"Rayman Legends.exe" -renderer=dx9 # for directX 9
+"Rayman Legends.exe" -renderer=sdl2 # for sdl2
+```
+
 ## Links
 * [How to build](Building.md)
 * [Notes that I made](Notes.md)

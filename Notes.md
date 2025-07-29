@@ -24,7 +24,7 @@ Actually scrap what I said before about sub_11FFE90 grabbing the contents. I thi
 
 From my understanding, in this case it's so multiple instances of the game cannot be opened.
 
-# sub_1F3CC0 - Initializer?...
+# sub_1F3CC0 (renamed to ApplicationFramework__init) - Initializer?...
 
 ## Thoughts/How it works
 
