@@ -257,62 +257,73 @@ void Bundle::closeBundle() {
 }
 
 bool Bundle::fileExists(const std::string& path) const {
-    if (!m_bundleHeader) return false;
-    Path pathObj(path);
-    return m_bundleHeader->fileExists(&pathObj);
+    for (const auto& entry : m_fileList) {
+        if (entry.first.fullPath() == path) {
+            return true;
+        }
+    }
+    return false;
 }
 
 uint32_t Bundle::fileGetSize(const std::string& path) const {
-    if (!m_bundleHeader) return 0;
-    Path pathObj(path);
-    return m_bundleHeader->fileGetSize(&pathObj);
+    for (const auto& entry : m_fileList) {
+        if (entry.first.fullPath() == path) {
+            return entry.first.size;
+        }
+    }
+    return 0;
 }
 
 uint32_t Bundle::fileGetCompressedSize(const std::string& path) const {
-    if (!m_bundleHeader) return 0;
-    Path pathObj(path);
-    return m_bundleHeader->fileGetCompressedSize(&pathObj);
+    for (const auto& entry : m_fileList) {
+        if (entry.first.fullPath() == path) {
+            return entry.first.cmpSize;
+        }
+    }
+    return 0;
 }
 
 int64_t Bundle::fileGetLastTimeWriteAccess(const std::string& path) const {
-    if (!m_bundleHeader) return 0;
-    Path pathObj(path);
-    return m_bundleHeader->fileGetLastTimeWriteAccess(&pathObj);
+    for (const auto& entry : m_fileList) {
+        if (entry.first.fullPath() == path) {
+            return entry.first.time;
+        }
+    }
+    return 0;
 }
 
 bool Bundle::fileGetPosition(const std::string& path, uint64_t& position, uint64_t& size, bool& compressed) const {
-    if (!m_bundleHeader) return false;
-    
-    Path pathObj(path);
-    position = m_bundleHeader->fileGetPosition(&pathObj) + m_globalPosition;
-    uint32_t compressedSize = m_bundleHeader->fileGetCompressedSize(&pathObj);
-    
-    if (compressedSize > 0) {
-        size = compressedSize;
-        compressed = true;
-    } else {
-        size = m_bundleHeader->fileGetSize(&pathObj);
-        compressed = false;
+    for (const auto& entry : m_fileList) {
+        if (entry.first.fullPath() == path) {
+            position = static_cast<uint64_t>(entry.second) + m_globalPosition;
+            if (entry.first.cmpSize > 0) {
+                size = entry.first.cmpSize;
+                compressed = true;
+            } else {
+                size = entry.first.size;
+                compressed = false;
+            }
+            return true;
+        }
     }
-    
-    return true;
+    return false;
 }
 
 Filepack* Bundle::fileOpen(const std::string& path, uint32_t flags) {
-    if (!m_bundleHeader) return nullptr;
-    
-    Path pathObj(path);
-    FileHeaderRuntime* header = m_bundleHeader->getHeaderRuntime(&pathObj);
-    if (!header) return nullptr;
-    
-    uint64_t offset = m_bundleHeader->fileGetPosition(&pathObj) + m_globalPosition;
-    
-    Filepack* filepack = new Filepack(this, offset, header->size, header->compressedSize, &pathObj);
-    if (header->compressedSize > 0) {
-        filepack->readFileToBuffer(flags);
+    for (const auto& entry : m_fileList) {
+        if (entry.first.fullPath() == path) {
+            uint64_t offset = static_cast<uint64_t>(entry.second) + m_globalPosition;
+            Path pathObj(path);
+            
+            Filepack* filepack = new Filepack(this, offset, entry.first.size, entry.first.cmpSize, &pathObj);
+            if (entry.first.cmpSize > 0) {
+                filepack->readFileToBuffer(flags);
+            }
+            
+            return filepack;
+        }
     }
-    
-    return filepack;
+    return nullptr;
 }
 
 bool Bundle::fileRead(uint64_t offset, uint8_t* buffer, uint32_t size, uint32_t* bytesRead) {
@@ -510,6 +521,28 @@ bool FilePackMaster::serialize(ArchiveMemory* archive) {
 }
 
 bool FilePackMaster::deserialize(ArchiveMemory* archive) {
+    if (!archive) return false;
+    
+    uint32_t fileCount;
+    if (!archive->read(reinterpret_cast<uint8_t*>(&fileCount), sizeof(fileCount))) return false;
+    
+    for (uint32_t i = 0; i < fileCount; i++) {
+        uint32_t pathLength;
+        if (!archive->read(reinterpret_cast<uint8_t*>(&pathLength), sizeof(pathLength))) return false;
+        
+        std::string path(pathLength, '\0');
+        if (!archive->read(reinterpret_cast<uint8_t*>(&path[0]), pathLength)) return false;
+        
+        FileHeaderRuntime* header = new FileHeaderRuntime();
+        
+        if (!archive->read(reinterpret_cast<uint8_t*>(&header->size), sizeof(header->size))) return false;
+        if (!archive->read(reinterpret_cast<uint8_t*>(&header->compressedSize), sizeof(header->compressedSize))) return false;
+        if (!archive->read(reinterpret_cast<uint8_t*>(&header->offset), sizeof(header->offset))) return false;
+        if (!archive->read(reinterpret_cast<uint8_t*>(&header->timestamp), sizeof(header->timestamp))) return false;
+        if (!archive->read(reinterpret_cast<uint8_t*>(&header->checksum), sizeof(header->checksum))) return false;
+        if (!archive->read(reinterpret_cast<uint8_t*>(&header->flags), sizeof(header->flags))) return false;        
+        m_files[path] = header;
+    }
     return true;
 }
 
@@ -525,6 +558,10 @@ SharableBundleHeader::~SharableBundleHeader() {
 
 bool SharableBundleHeader::build(FilePackMaster* filePackMaster) {
     if (!filePackMaster) return false;
+    
+    for (const auto& [path, header] : filePackMaster->m_files) {
+        m_fileHeaders[path] = header;
+    }
     m_isBuilt = true;
     return true;
 }
