@@ -18,17 +18,6 @@ uint32_t swapEndian(uint32_t value) {
            ((value >> 24) & 0xFF);
 }
 
-class File {
-public:
-    virtual ~File() = default;
-    virtual bool open(const std::string& path, int mode, int flags) = 0;
-    virtual bool read(uint8_t* buffer, uint32_t size) = 0;
-    virtual bool seek(uint64_t position) = 0;
-    virtual uint64_t getSize() const = 0;
-    virtual uint64_t getPosition() const = 0;
-    virtual void close() = 0;
-};
-
 class ArchiveMemory {
 public:
     ArchiveMemory(const uint8_t* data, uint32_t size);
@@ -232,6 +221,14 @@ bool Bundle::openBundle(const std::string& path, int mode, bool checkBootHeader,
         }
         m_fileList.emplace_back(props, offset);
     }
+    
+    m_fileHandle = std::make_unique<FileMemoryShared>(0);
+    if (!m_fileHandle->open(m_path, mode, flags)) {
+        std::cerr << "Failed to open bundle file for reading: " << m_path << std::endl;
+        return false;
+    }
+    
+    m_cache = std::make_unique<BundleCache>(m_fileHandle.get(), 8192);
     return true;
 }
 
@@ -351,8 +348,8 @@ bool Bundle::fileRead(uint64_t offset, uint8_t* buffer, uint32_t size, uint32_t*
         }
         
         if (size > 0) {
-            uint32_t directBytes;
-            m_fileHandle->read(buffer, size);
+            if (!m_fileHandle->seek(offset + *bytesRead)) return false;
+            if (!m_fileHandle->read(buffer, size)) return false;
             *bytesRead += size;
             m_currentPosition += size;
         }
@@ -658,8 +655,17 @@ uint64_t BundleCache::getCacheEnd() const { return m_cacheEnd; }
 uint32_t BundleCache::getCacheSize() const { return m_cacheSize; }
 
 bool BundleCache::loadCache(uint64_t position) {
+    if (!m_file) return false;
+    
     m_cacheStart = position;
     m_cacheEnd = position + m_cacheSize;
+    
+    if (!m_file->seek(position)) return false;
+    
+    uint32_t bytesToRead = static_cast<uint32_t>(m_cacheEnd - m_cacheStart);
+    if (!m_file->read(m_cache.data(), bytesToRead)) return false;
+    
+    m_currentPosition = position;
     return true;
 }
 
