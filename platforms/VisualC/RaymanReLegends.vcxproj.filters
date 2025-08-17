@@ -48,9 +48,6 @@
     <ClCompile Include="..\..\src\engine\graphics\GraphicsInitializer.cpp">
       <Filter>Source Files\engine\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\graphics\SDL2Renderer.cpp">
-      <Filter>Source Files\engine\graphics</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\platform\DXInit.cpp">
       <Filter>Source Files\engine\platform</Filter>
     </ClCompile>

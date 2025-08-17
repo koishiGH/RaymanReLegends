@@ -6,7 +6,6 @@
 #include <bink/bink.h>
 #include <windows.h>
 #endif
-#include <SDL2/SDL.h>
 
 VideoPlayer::VideoPlayer() {
 #ifdef _WIN32
@@ -98,74 +97,6 @@ bool VideoPlayer::Update(HWND hwnd) {
 }
 #endif
 
-bool VideoPlayer::Update(SDL_Window* window) {
-#ifdef _WIN32
-    if (!playing || !binkHandle || !window) return false;
-#else
-    if (!playing || !window) return false;
-    std::cerr << "Video playback not supported on this platform....yet!" << std::endl;
-    playing = false;
-    finished = true;
-    return false;
-#endif
-
-#ifdef _WIN32
-    if (!sdlInitialized) {
-        sdlWindow = window;
-        sdlRenderer = SDL_GetRenderer(window);
-        if (!sdlRenderer) {
-            std::cerr << "Failed to get SDL renderer for video playback" << std::endl;
-            return false;
-        }
-        
-        videoTexture = SDL_CreateTexture(
-            sdlRenderer,
-            SDL_PIXELFORMAT_ARGB8888,
-            SDL_TEXTUREACCESS_STREAMING,
-            width, height
-        );
-        
-        if (!videoTexture) {
-            std::cerr << "Failed to create SDL texture for video: " << SDL_GetError() << std::endl;
-            return false;
-        }
-        
-        sdlInitialized = true;
-    }
-
-    if (!BinkWait(binkHandle)) {
-        BinkDoFrame(binkHandle);
-        
-        void* pixels;
-        int pitch;
-        if (SDL_LockTexture(videoTexture, nullptr, &pixels, &pitch) == 0) {
-            BinkCopyToBuffer(
-                binkHandle,
-                pixels,
-                pitch,
-                height,
-                0, 0,
-                BINKSURFACE32
-            );
-            SDL_UnlockTexture(videoTexture);
-            SDL_RenderClear(sdlRenderer);
-            SDL_RenderCopy(sdlRenderer, videoTexture, nullptr, nullptr);
-            SDL_RenderPresent(sdlRenderer);
-        }
-        
-        BinkNextFrame(binkHandle);
-
-        if (binkHandle->FrameNum >= binkHandle->Frames) {
-            playing = false;
-            finished = true;
-            return false;
-        }
-    }
-
-    return true;
-#endif
-}
-
 bool VideoPlayer::IsPlaying() const { return playing; }
 
 bool VideoPlayer::HasFinished() const { return finished; }
@@ -193,14 +124,4 @@ void VideoPlayer::Stop() {
         hwndForBlit = nullptr;
     }
 #endif
-    
-    if (sdlInitialized) {
-        if (videoTexture) {
-            SDL_DestroyTexture(videoTexture);
-            videoTexture = nullptr;
-        }
-        sdlRenderer = nullptr;
-        sdlWindow = nullptr;
-        sdlInitialized = false;
-    }
 }

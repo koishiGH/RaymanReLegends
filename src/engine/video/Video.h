@@ -7,8 +7,6 @@
 #include <windows.h>
 #endif
 
-#include <SDL2/SDL.h>
-
 class VideoPlayer {
 public:
     VideoPlayer();
@@ -20,7 +18,6 @@ public:
 #ifdef _WIN32
     bool Update(HWND hwnd);
 #endif
-    bool Update(SDL_Window* window);
     
     bool IsPlaying() const;
     bool HasFinished() const;
@@ -42,9 +39,4 @@ private:
     bool blitInitialized = false;
     HWND hwndForBlit = nullptr;
 #endif
-
-    SDL_Window* sdlWindow = nullptr;
-    SDL_Renderer* sdlRenderer = nullptr;
-    SDL_Texture* videoTexture = nullptr;
-    bool sdlInitialized = false;
 };

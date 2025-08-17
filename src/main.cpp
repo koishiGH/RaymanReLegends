@@ -10,10 +10,8 @@
 #include "engine/system/regconfig.h"
 #include "engine/system/config.h"
 #include "engine/graphics/GraphicsInitializer.h"
-#include "engine/graphics/SDL2Renderer.h"
 #include "engine/video/Video.h"
 #include "engine/resource/Bundle.h"
-#include <SDL2/SDL.h>
 
 std::string ParseRendererType(int argc, char* argv[]) {
     for (int i = 1; i < argc; i++) {
@@ -91,14 +89,6 @@ int main(int argc, char* argv[]) {
     
     bool running = true;
     while (running) {
-        if (strcmp(renderer->GetName(), "SDL2") == 0) {
-            auto sdlRenderer = static_cast<SDL2Renderer*>(renderer.get());
-            if (sdlRenderer && sdlRenderer->ShouldQuit()) {
-                running = false;
-                break;
-            }
-        }
-        
 #ifdef _WIN32
         MSG msg;
         while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
@@ -111,23 +101,11 @@ int main(int argc, char* argv[]) {
         }
         
         if (video.IsPlaying()) {
-            if (strcmp(renderer->GetName(), "SDL2") == 0) {
-                auto sdlRenderer = static_cast<SDL2Renderer*>(renderer.get());
-                if (sdlRenderer) {
-                    sdlRenderer->HandleEvents();
-                }
-            }
-            
             auto rendererName = renderer->GetName();
             if (strcmp(rendererName, "DirectX 9") == 0) {
                 auto dxContext = graphics.GetDXContext();
                 if (dxContext && dxContext->hwnd) {
                     video.Update(dxContext->hwnd);
-                }
-            } else if (strcmp(rendererName, "SDL2") == 0) {
-                auto sdlContext = graphics.GetSDLContext();
-                if (sdlContext && sdlContext->window) {
-                    video.Update(static_cast<SDL_Window*>(sdlContext->window));
                 }
             }
             Sleep(16);
@@ -138,35 +116,12 @@ int main(int argc, char* argv[]) {
             renderer->Clear(0.1f, 0.1f, 0.3f, 1.0f);
             renderer->EndFrame();
         }
-#else
-        if (video.IsPlaying()) {
-            if (strcmp(renderer->GetName(), "SDL2") == 0) {
-                auto sdlRenderer = static_cast<SDL2Renderer*>(renderer.get());
-                if (sdlRenderer) {
-                    sdlRenderer->HandleEvents();
-                }
-            }
-            
-            auto rendererName = renderer->GetName();
-            if (strcmp(rendererName, "SDL2") == 0) {
-                auto sdlContext = graphics.GetSDLContext();
-                if (sdlContext && sdlContext->window) {
-                    video.Update(static_cast<SDL_Window*>(sdlContext->window));
-                }
-            }
-            SDL_Delay(16);
-        } else {
-            if (!renderer->BeginFrame()) {
-                break;
-            }
-            renderer->Clear(0.1f, 0.1f, 0.3f, 1.0f);
-            renderer->EndFrame();
-        }
-#endif
-#ifdef _WIN32
+        
         Sleep(1);
 #else
-        SDL_Delay(1);
+        std::cerr << "Error: No renderer available for this platform." << std::endl;
+        running = false;
+        break;
 #endif
     }
 

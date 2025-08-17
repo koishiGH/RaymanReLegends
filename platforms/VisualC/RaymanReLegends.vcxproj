@@ -22,7 +22,6 @@
     <ClCompile Include="..\..\external\tinyxml2.cpp" />
     <ClCompile Include="..\..\src\engine\graphics\DirectXRenderer.cpp" />
     <ClCompile Include="..\..\src\engine\graphics\GraphicsInitializer.cpp" />
-    <ClCompile Include="..\..\src\engine\graphics\SDL2Renderer.cpp" />
     <ClCompile Include="..\..\src\engine\platform\DXInit.cpp" />
     <ClCompile Include="..\..\src\engine\platform\window.cpp" />
     <ClCompile Include="..\..\src\engine\resource\Bundle.cpp" />
@@ -111,7 +110,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>binkw32.lib;d3d9.lib;winmm.lib;d3dx9.lib;SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>binkw32.lib;d3d9.lib;winmm.lib;d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../../external/lib/x86</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
@@ -132,7 +131,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>binkw32.lib;d3d9.lib;winmm.lib;d3dx9.lib;SDL2.lib;SDL2main.lib;SDL2test.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>binkw32.lib;d3d9.lib;winmm.lib;d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../../external/lib/x86</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>

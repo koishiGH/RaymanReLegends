@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <iostream>
 #include "DirectXRenderer.h"
-#include "SDL2Renderer.h"
 
 GraphicsInitializer::GraphicsInitializer() 
     : width_(0), height_(0), fullscreen_(false), initialized_(false) {
@@ -26,19 +25,15 @@ bool GraphicsInitializer::Initialize(int width, int height, bool fullscreen, con
     std::transform(rendererTypeLower.begin(), rendererTypeLower.end(), rendererTypeLower.begin(), ::tolower);
 
 #ifdef _WIN32
-    if (rendererTypeLower == "sdl2") {
-        renderer_ = std::make_shared<SDL2Renderer>();
-    } else if (rendererTypeLower == "dx9" || rendererTypeLower == "directx" || rendererTypeLower == "auto") {
+    if (rendererTypeLower == "dx9" || rendererTypeLower == "directx" || rendererTypeLower == "auto") {
         renderer_ = std::make_shared<DirectXRenderer>();
     } else {
         std::cerr << "Unknown renderer type: " << rendererType << ". Using DirectX 9." << std::endl;
         renderer_ = std::make_shared<DirectXRenderer>();
     }
 #else
-    if (rendererTypeLower != "sdl2" && rendererTypeLower != "auto") {
-        std::cerr << "Warning: SDL2 is the only available renderer on this platform. Ignoring renderer type: " << rendererType << std::endl;
-    }
-    renderer_ = std::make_shared<SDL2Renderer>();
+    std::cerr << "Error: No renderer available for this platform." << std::endl;
+    return false;
 #endif
 
     if (!renderer_) {
@@ -74,10 +69,3 @@ DX9Context* GraphicsInitializer::GetDXContext() const {
     return nullptr;
 }
 #endif
-
-SDL2Context* GraphicsInitializer::GetSDLContext() const {
-    if (renderer_ && renderer_->IsValid()) {
-        return static_cast<SDL2Context*>(renderer_->GetNativeContext());
-    }
-    return nullptr;
-}

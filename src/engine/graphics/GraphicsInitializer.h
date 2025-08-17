@@ -24,15 +24,6 @@ struct DX9Context {
 };
 #endif
 
-struct SDL2Context {
-    void* window = nullptr;
-    void* renderer = nullptr;
-    void* texture = nullptr;
-    int width = 0;
-    int height = 0;
-    bool fullscreen = false;
-};
-
 class IGraphicsRenderer {
 public:
     virtual ~IGraphicsRenderer() = default;
@@ -62,7 +53,6 @@ public:
 #ifdef _WIN32
     DX9Context* GetDXContext() const;
 #endif
-    SDL2Context* GetSDLContext() const;
 
 private:
     std::shared_ptr<IGraphicsRenderer> renderer_;
