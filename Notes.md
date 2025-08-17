@@ -24,11 +24,14 @@ Actually scrap what I said before about sub_11FFE90 grabbing the contents. I thi
 
 From my understanding, in this case it's so multiple instances of the game cannot be opened.
 
-# sub_1F3CC0 (renamed to ApplicationFramework__init) - Initializer?...
+# sub_903CC0 (renamed to ApplicationFramework__init) - Initializer?...
 
 ## Thoughts/How it works
 
-Okay so this HAS a lot of things, it handles the launch arguments, calls sub_1F1D50 which calls sub_A3CDD0 which calls sub_A3CC20, handles stuff related to the Network Services, handles the Bundle_[DEVICE].ipk (I think)
+Okay so this HAS a lot of things, it handles the launch arguments, calls sub_1F1D50 which calls sub_A3CDD0 which calls sub_A3CC20, handles stuff related to the Network Services 
+
+sub_901B30 handles launch arguments (?)
+sub_90ABA0 handles the Bundle_[DEVICE].ipk (I think)
 
 
 ### Launch argument example
@@ -47,7 +50,7 @@ But it seems like it just registers the device there and MAYBE sets a specific c
 
 # sub_1F8020 - A resource or thread cleanup(?)
 
-# sub_1FABA0 - Reads the contents of the .ipk files
+# sub_90ABA0 - Reads the contents of the .ipk files
 
 ## Thoughts/How it works
 
