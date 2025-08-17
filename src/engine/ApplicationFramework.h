@@ -2,12 +2,12 @@
 
 #include <string>
 #include <memory>
-#include "engine/platform/window.h"
-#include "engine/system/regconfig.h"
-#include "engine/system/config.h"
-#include "engine/graphics/GraphicsInitializer.h"
-#include "engine/video/Video.h"
-#include "engine/resource/Bundle.h"
+#include "platform/window.h"
+#include "system/regconfig.h"
+#include "system/config.h"
+#include "graphics/GraphicsInitializer.h"
+#include "video/Video.h"
+#include "resource/Bundle.h"
 
 class ApplicationFramework {
 public:
@@ -17,7 +17,8 @@ public:
     bool init(int argc, char* argv[]);    
     int update();    
     void display(float deltaTime);
-    void destroy();
+    void destroy();    
+    bool isVideoPlaying() const;
 
 private:
     std::string parseRendererType(int argc, char* argv[]);

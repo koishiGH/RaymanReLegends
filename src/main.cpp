@@ -16,15 +16,11 @@ int main(int argc, char* argv[]) {
             running = false;
             break;
         }
-        
         app.display(16.0f / 1000.0f);
-        
 #ifdef _WIN32
         Sleep(16);
 #endif
     }
-    
     app.destroy();
-    
     return 0;
 }

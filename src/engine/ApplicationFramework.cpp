@@ -64,11 +64,13 @@ int ApplicationFramework::update() {
 }
 
 void ApplicationFramework::display(float deltaTime) {
-    if (!m_graphicsInitialized) {
-        return;
+    if (!isVideoPlaying() && m_graphicsInitialized) {
+        displayFrame();
     }
-    
-    displayFrame();
+}
+
+bool ApplicationFramework::isVideoPlaying() const {
+    return m_videoInitialized && m_video && m_video->IsPlaying();
 }
 
 void ApplicationFramework::destroy() {
@@ -173,7 +175,6 @@ void ApplicationFramework::updateVideo() {
                 m_video->Update(dxContext->hwnd);
             }
         }
-        Sleep(16);
     }
 #endif
 }
